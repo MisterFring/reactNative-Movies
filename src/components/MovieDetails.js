@@ -15,6 +15,10 @@ const MovieDetails = props => {
     const movie = props.route.params.movie
     return (
         <View style={styles.container}>
+            <Image
+            source={require('../assets/images/share.png')}
+            style={styles.shareIcon}
+          />
             <Image 
                 resizeMode='cover'
                 style={styles.posterImg}
@@ -54,6 +58,12 @@ const styles = StyleSheet.create({
     movieTitle: {
         fontSize: 50,
         color: '#E74D2C'
+    }, 
+    shareIcon: {
+        width: 30, 
+        height: 30,
+        marginLeft: 300,
+        marginBottom: 20
     }
 })
 
