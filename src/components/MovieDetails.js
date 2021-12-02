@@ -1,11 +1,19 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useCallback, useEffect, useMemo, useState, Linking, Share } from 'react';
+import axios from 'axios';
+import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+import { openInbox } from "react-native-email-link";
+import { result } from 'lodash';
+
+// import {DB_KEY} from 'react-native-dotenv'
 import {
     View,
     StyleSheet,
     Image,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    SafeAreaView,
+    Platform
 } from 'react-native';
 import { json } from 'body-parser';
 import { co } from 'co';
@@ -75,12 +83,60 @@ const MovieDetails = props => {
         }
     }
 
+    const SendEmail = () => {
+        if(Platform.OS==='android') {
+            check(PERMISSIONS.ANDROID.READ_CONTACTS)
+                .then((result) => {
+                    switch(result) {
+                        case RESULTS.DENIED: 
+                        request(PERMISSIONS.ANDROID.READ_CONTACTS)
+                        console.log('denied')
+                        break;
+                        case RESULTS.GRANTED:
+                            console.log('The permission is granted');
+                            onSharePress = () => Share.share(shareOptions)
+                            break;
+                        case RESULTS.BLOCKED:
+                            request(PERMISSIONS.ANDROID.READ_CONTACTS)
+                            console.log('The permission is denied and not requestable anymore');
+                            alert('Vous avez précédemment refusé l accès aux contacts, allez dans vos paramètres pour changer la permission')
+
+                            break;
+                }
+        
+            })
+
+    } else if(Platform.OS === 'ios') {
+        request(PERMISSIONS.IOS.CONTACTS)
+            .then((result) => {
+                if(result == 'granted') {
+                    setIsPermitted(true)
+                }else {
+                    setIsPermitted(false)
+                }
+        })
+        
+    }
+   
+
+}
+
+    const email = () => {
+        Share.share(shareOptions)
+    }
+
+
+
     return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={email}>
             <Image
             source={require('../assets/images/share.png')}
             style={styles.shareIcon}
             />
+          
+            </TouchableOpacity>
+           
             <Image 
                 resizeMode='cover'
                 style={styles.posterImg}
@@ -105,7 +161,9 @@ const MovieDetails = props => {
 
         </View>
     )
-}
+            }
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
