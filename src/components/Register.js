@@ -1,4 +1,7 @@
+import { get } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 import {
     Image,
@@ -10,14 +13,31 @@ import {
     StyleSheet
   } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { type } from 'os';
+import { typeOf } from 'react-is';
 
-const Login = () => {
+const Register = () => {
+    const [mail, setMail] = useState('')
+    const [isMailValid, setIsMailValid] = useState(true)
     const [pwd, setPwd] = useState('');
     const [confirmPwd, setConfirmPwd] = useState('');
     const [isValid, setIsValid] = useState(true);
     const [pwdsEqual, setPwdsEqual] = useState(true);
 
     console.log('mdp : ' + pwd);
+<<<<<<< HEAD:src/components/Login.js
+=======
+
+    // const pwdsEqual = useMemo( () => {
+    //     return (pwd === confirmPwd) ? true : false
+    // }, [pwd, confirmPwd])
+
+
+    const checkMail = useCallback( ()=> {
+        (mail.includes('@') && mail.length > 5) ? setIsMailValid(true) : setIsMailValid(false)
+        return isMailValid
+    })    
+>>>>>>> 553df44 (register de ses morts):src/components/Register.js
     const checkPwd = useCallback( () => {
         const valid = pwd.length > 3
         setIsValid(valid) 
@@ -32,11 +52,53 @@ const Login = () => {
 
     const pressButton = useCallback( () => {
         if (!checkPwd() | !checkConfPwd()){
+            alert('error');
             return
         }
-        alert('Bonjour, votre mot de passe est : ' + pwd);
+        storeUser()
+        
     }, [pwd, checkPwd, checkConfPwd]);
 
+<<<<<<< HEAD:src/components/Login.js
+=======
+    const storeUser = async () => {
+        // await AsyncStorage.setItem('@users', ''); //pour vider la 'bdd'
+        const myUser = {
+            mail : mail,
+            password : pwd
+        }
+
+        AsyncStorage.getItem('@users', (err, result) => {
+            console.log('ntm : ' + result)
+            console.log('myUser : ' + myUser)
+            let bool = true;
+
+            const myArrayOfUsers = JSON.parse(result)
+
+            if (myArrayOfUsers) {
+                for (let i = 0; i < myArrayOfUsers.length; i++) {
+                    const element = myArrayOfUsers[i];
+                    if (element.mail == myUser.mail) {
+                        alert('vous êtes déjà enregistré')
+                        bool = false
+                        break
+                    } else {
+                        bool = true
+                    }
+                }
+            }
+            
+            if (bool) {
+                result = result === null ? [] : myArrayOfUsers;
+                result.push(myUser);
+                AsyncStorage.setItem('@users', JSON.stringify(result));
+                alert('Bien enregistré !')
+            }
+        });
+    }
+
+
+>>>>>>> 553df44 (register de ses morts):src/components/Register.js
     return (
     <ScrollView>
         <View style={styles.center}>
@@ -49,8 +111,7 @@ const Login = () => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <TextInput style={styles.inputBox} placeholder={'Prénom'} />
-          <TextInput style={styles.inputBox} placeholder={'Nom'} />
+          <TextInput style={[styles.inputBox, {borderColor: isMailValid ? 'black' : 'red'}]} placeholder={'Adresse mail'} value={mail} onChangeText={setMail} onEndEditing={checkMail}/>
           <TextInput onChangeText={setPwd} onEndEditing={checkPwd} value={pwd} style={[styles.inputBox, {borderColor: isValid ? 'black' : 'red'}]} placeholder={'Mot de passe'} />
           <TextInput
             onEndEditing={checkConfPwd}
@@ -111,4 +172,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 })
-export default Login
+export default Register

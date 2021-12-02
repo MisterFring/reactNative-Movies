@@ -43,7 +43,6 @@ const Movies = () => {
                             <TouchableOpacity onPress={ () => navigation.navigate('MovieDetails', {movie : item})}>
                                 <View style={styles.movieContainer}>
                                     <Image
-                                        resizeMode='cover'
                                         source={{
                                             uri: 'https://image.tmdb.org/t/p/w500' + item.poster_path
                                         }}
@@ -58,6 +57,7 @@ const Movies = () => {
             </SafeAreaView>   
     )
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

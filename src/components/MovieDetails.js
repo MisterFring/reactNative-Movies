@@ -7,10 +7,6 @@ import {
     Text,
     TouchableOpacity
 } from 'react-native';
-import { json } from 'body-parser';
-import { co } from 'co';
-import { BackgroundColor } from 'chalk';
-import set from 'set-value';
 
 const MovieDetails = props => {
     const movie = props.route.params.movie
@@ -34,6 +30,7 @@ const MovieDetails = props => {
         }
         
         run()
+
         
 
     }, [])
@@ -42,7 +39,6 @@ const MovieDetails = props => {
         const myOldData = await getData();
         let myOldArray = myOldData ? myOldData.split(',') : [];
         const id = movieId.toString();
-        console.log('etat du coeur : ' + movieLiked)
 
         if (myOldArray.indexOf(id) != -1) {
             console.log('déja dans les likes')
