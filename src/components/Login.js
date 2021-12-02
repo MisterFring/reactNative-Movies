@@ -18,10 +18,6 @@ const Login = () => {
     const [pwdsEqual, setPwdsEqual] = useState(true);
 
     console.log('mdp : ' + pwd);
-
-    // const pwdsEqual = useMemo( () => {
-    //     return (pwd === confirmPwd) ? true : false
-    // }, [pwd, confirmPwd])
     const checkPwd = useCallback( () => {
         const valid = pwd.length > 3
         setIsValid(valid) 
@@ -41,24 +37,8 @@ const Login = () => {
         alert('Bonjour, votre mot de passe est : ' + pwd);
     }, [pwd, checkPwd, checkConfPwd]);
 
-    // useEffect(() => {
-    //     if (pwd.length < 3){
-    //         setIsValid(false);
-    //     } else {
-    //         setIsValid(true)
-    //     }
-    // }, [pwd])
-
-
     return (
     <ScrollView>
-        {/* <View style={styles.redBox}></View>
-        <View style={styles.greenBox}>
-            <View style={styles.yellowSquare}></View>
-            <View style={styles.yellowSquare}></View>
-            <View style={styles.yellowSquare}></View>
-        </View>
-        <View style={styles.blueBox}></View> */}
         <View style={styles.center}>
           <Text style={styles.title}>Inscription</Text>
           <Image

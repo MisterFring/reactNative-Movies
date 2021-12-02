@@ -78,6 +78,11 @@ const MovieDetails = props => {
     return (
         <View style={styles.container}>
             <Image
+            source={require('../assets/images/share.png')}
+            style={styles.shareIcon}
+            />
+            <Image 
+                resizeMode='cover'
                 style={styles.posterImg}
                 source={{
                     uri: 'https://image.tmdb.org/t/p/w500' + movie.poster_path
@@ -128,6 +133,12 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         backgroundColor: 'red'
+    }, 
+    shareIcon: {
+        width: 30, 
+        height: 30,
+        marginLeft: 300,
+        marginBottom: 20
     }
 })
 
