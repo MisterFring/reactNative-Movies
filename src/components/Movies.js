@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 // import {DB_KEY} from 'react-native-dotenv'
 import {
     View,
@@ -22,6 +24,11 @@ const Movies = () => {
             .then(res => {
             const movies = res.data.results;
             setData(movies)
+            try {
+                AsyncStorage.setItem('@movies_trending', JSON.stringify(movies))
+            } catch (error) {
+                console.log('erroorororororoor : ' + error)
+            }
         })
     }, [])
     
