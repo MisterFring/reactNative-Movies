@@ -5,6 +5,7 @@ import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import { openInbox } from "react-native-email-link";
 import { result } from 'lodash';
 
+
 // import {DB_KEY} from 'react-native-dotenv'
 import {
     View,
@@ -78,6 +79,18 @@ const MovieDetails = props => {
           // error reading value
         }
     }
+    // const [movieData, setMovieData] = ueseState([]);
+    const movieId = props.route.params.movie.id
+    
+
+    useEffect(() => {
+        axios.get(`https://api.themoviedb.org/3/movie/370172/videos?api_key=` +  'd89f44ef7b82944aedf327888bbcccab')
+            .then(res => {
+                // const video = res.data.results;
+                console.log(res.data.results[0])
+            })
+    }, [])
+
 
     const SendEmail = () => {
         if(Platform.OS==='android') {
@@ -155,7 +168,9 @@ const MovieDetails = props => {
             </TouchableOpacity>
 
 
+
         </View>
+        
     )
             }
 
