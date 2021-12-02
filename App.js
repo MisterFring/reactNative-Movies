@@ -5,6 +5,7 @@ import FlatListPrenom from './flatList';
 import ToDoList from './src/components/ToDoList';
 import TodoListDetails from './src/components/ToDoListDetails';
 import Movies from './src/components/Movies';
+import Login from './src/components/Login';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigator from './src/components/TabNavigator';
@@ -24,18 +25,19 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator 
-          // initialRouteName="Movies" 
+          initialRouteName="Login" 
           // screenOptions={{
           //   headerShown: false
           // }}
       >
         <Stack.Screen name="Register" component={Register} />
-        {/* <Stack.Screen name="TabNav" component={TabNavigator} /> */}
+        <Stack.Screen name="TabNav" component={TabNavigator} />
 
         {/* <Stack.Screen name="LikedMovies" component={likedMovies} />
         <Stack.Screen name="ToDoList" component={ToDoList} />
-        <Stack.Screen name="ToDoListDetails" component={TodoListDetails} />
-        <Stack.Screen name="Movies" component={Movies} />*/}
+        <Stack.Screen name="ToDoListDetails" component={TodoListDetails} />*/}
+        <Stack.Screen name="Movies" component={Movies} />
+        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="MovieDetails" component={MovieDetails} /> 
 
       </Stack.Navigator>

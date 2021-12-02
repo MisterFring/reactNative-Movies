@@ -1,6 +1,7 @@
-import { get } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 import {
@@ -11,10 +12,7 @@ import {
     TouchableOpacity,
     View,
     StyleSheet
-  } from 'react-native';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { type } from 'os';
-import { typeOf } from 'react-is';
+} from 'react-native';
 
 const Register = () => {
     const [mail, setMail] = useState('')
@@ -23,10 +21,7 @@ const Register = () => {
     const [confirmPwd, setConfirmPwd] = useState('');
     const [isValid, setIsValid] = useState(true);
     const [pwdsEqual, setPwdsEqual] = useState(true);
-
-    console.log('mdp : ' + pwd);
-<<<<<<< HEAD:src/components/Login.js
-=======
+    const navigation = useNavigation()
 
     // const pwdsEqual = useMemo( () => {
     //     return (pwd === confirmPwd) ? true : false
@@ -37,7 +32,6 @@ const Register = () => {
         (mail.includes('@') && mail.length > 5) ? setIsMailValid(true) : setIsMailValid(false)
         return isMailValid
     })    
->>>>>>> 553df44 (register de ses morts):src/components/Register.js
     const checkPwd = useCallback( () => {
         const valid = pwd.length > 3
         setIsValid(valid) 
@@ -59,8 +53,6 @@ const Register = () => {
         
     }, [pwd, checkPwd, checkConfPwd]);
 
-<<<<<<< HEAD:src/components/Login.js
-=======
     const storeUser = async () => {
         // await AsyncStorage.setItem('@users', ''); //pour vider la 'bdd'
         const myUser = {
@@ -69,7 +61,7 @@ const Register = () => {
         }
 
         AsyncStorage.getItem('@users', (err, result) => {
-            console.log('ntm : ' + result)
+            console.log('in storage : ' + result)
             console.log('myUser : ' + myUser)
             let bool = true;
 
@@ -89,20 +81,19 @@ const Register = () => {
             }
             
             if (bool) {
-                result = result === null ? [] : myArrayOfUsers;
+                result = (result === null) ? [] : myArrayOfUsers;
                 result.push(myUser);
                 AsyncStorage.setItem('@users', JSON.stringify(result));
                 alert('Bien enregistré !')
+                navigation.navigate('Login')
             }
         });
     }
 
 
->>>>>>> 553df44 (register de ses morts):src/components/Register.js
     return (
     <ScrollView>
         <View style={styles.center}>
-          <Text style={styles.title}>Inscription</Text>
           <Image
             source={{
                 uri: 'https://lh3.googleusercontent.com/proxy/nuggHz1hsPEiIL0ndXZvypUAlYRSxJ0FX_aitoQ5TrLPmhxe1mG2KxE5WCheD1H1zLIyaBznSRcB-d5j0RNNfuke6BeE-CPJRuGGlvZfnuN5dGo8Dg'
@@ -123,10 +114,12 @@ const Register = () => {
         </View>
         <View style={styles.center}>
           <TouchableOpacity style={styles.button} onPress={pressButton}>
-            <Text>Envoyer</Text>
+            <Text>S'inscrire</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+            <Text>Login</Text>
           </TouchableOpacity>
         </View>
-        <KeyboardSpacer/>
     </ScrollView>
     )
 

@@ -5,9 +5,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Movies from './Movies';
 import LikedMovies from './LikedMovies';
+import { View, Image } from 'react-native';
 
 
 const Tab = createBottomTabNavigator();
+
 
 
 // import {DB_KEY} from 'react-native-dotenv'
@@ -29,7 +31,14 @@ const TabNavigator = () => {
     }
     return (
         <Tab.Navigator>
-            <Tab.Screen name='Movies' component={Movies}/>
+            <Tab.Screen name='Movies' component={Movies} options={{
+                tabBarIcon: () => (
+                    <Image
+                        source={require('../assets/images/coeur.png')}
+                        style={{ width: 26, height: 26}}
+                    />
+                )
+            }}/>
             <Tab.Screen name='LikedMovies' component={LikedMovies} options={{ tabBarBadge: nbMoviesLiked }}/>
         </Tab.Navigator>
     )
