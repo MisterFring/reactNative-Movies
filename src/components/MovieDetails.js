@@ -180,7 +180,6 @@ const MovieDetails = (props) => {
             apiKey={apiKey}
             videoId={movieKey} // The YouTube video ID
             style={{ width: width - 50, height: 300 }}
-            play={true}
           />
         </View>
       </View>
