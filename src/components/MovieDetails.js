@@ -12,8 +12,7 @@ import {
     Image,
     Text,
     TouchableOpacity,
-    SafeAreaView,
-    Platform
+    ScrollView
 } from 'react-native';
 
 const MovieDetails = props => {
@@ -36,10 +35,10 @@ const MovieDetails = props => {
                 }
             }
         }
-        
+
         run()
 
-        
+
 
     }, [])
 
@@ -66,7 +65,7 @@ const MovieDetails = props => {
               // saving error
             }
         }
-        
+
     }
 
     const getData = async () => {
@@ -84,7 +83,7 @@ const MovieDetails = props => {
             check(PERMISSIONS.ANDROID.READ_CONTACTS)
                 .then((result) => {
                     switch(result) {
-                        case RESULTS.DENIED: 
+                        case RESULTS.DENIED:
                         request(PERMISSIONS.ANDROID.READ_CONTACTS)
                         console.log('denied')
                         break;
@@ -99,7 +98,7 @@ const MovieDetails = props => {
 
                             break;
                 }
-        
+
             })
 
     } else if(Platform.OS === 'ios') {
@@ -111,9 +110,9 @@ const MovieDetails = props => {
                     setIsPermitted(false)
                 }
         })
-        
+
     }
-   
+
 
 }
 
@@ -125,34 +124,34 @@ const MovieDetails = props => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={email}>
-            <Image
-            source={require('../assets/images/share.png')}
-            style={styles.shareIcon}
-            />
-          
-            </TouchableOpacity>
-           
-            <Image 
-                resizeMode='cover'
-                style={styles.posterImg}
-                source={{
-                    uri: 'https://image.tmdb.org/t/p/w500' + movie.poster_path
-                }}
-            />
-            <Text style={styles.movieTitle}>{movie.original_title}</Text>
-            <Text>{movie.id}</Text>
-            <Text>Synopsis : {movie.overview}</Text>
-            <Text>Note des spectateurs : {movie.vote_average} / 10</Text>
-            <TouchableOpacity onPress={() => storeData(movie.id)}>
+            <ScrollView style={styles.blockDetails}>
                 <Image
-                    style={movieLiked ? styles.likeImgRed : styles.likeImg}
-                    source={require('../assets/images/coeur.png')}
+                    resizeMode='cover'
+                    style={styles.posterImg}
+                    source={{
+                        uri: 'https://image.tmdb.org/t/p/w500' + movie.poster_path
+                    }}
                 />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={getData}>
-                <Text>test get data</Text>
-            </TouchableOpacity>
+                <Text style={styles.movieTitle}>{movie.original_title}</Text>
+                <Text>Synopsis : {movie.overview}</Text>
+                <Text>Note des spectateurs : {movie.vote_average} / 10</Text>
+            </ScrollView>
+
+
+            <View style={styles.imagesContainer}>
+                <TouchableOpacity onPress={() => storeData(movie.id)}>
+                    <Image
+                        style={styles.likeImg}
+                        source = { movieLiked ? require('../assets/images/coeur-rouge.png') : require('../assets/images/coeur.png')}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <Image
+                    source={require('../assets/images/share.png')}
+                    style={styles.shareIcon}
+                    />
+                </TouchableOpacity>
+            </View>
 
 
         </View>
@@ -165,7 +164,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         marginTop: 30,
-        paddingHorizontal: 20 
+        paddingHorizontal: 20
     },
     posterImg:{
         width: 350,
@@ -183,17 +182,19 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
     },
-    likeImgRed: {
-        width: 100,
-        height: 100,
-        backgroundColor: 'red'
-    }, 
     shareIcon: {
-        width: 30, 
-        height: 30,
-        marginLeft: 300,
-        marginBottom: 20
+        width: 30,
+        height: 30
+    },
+    imagesContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        bottom: 0
+    },
+    blockDetails: {
+        maxHeight: '80%'
     }
+
 })
 
 export default MovieDetails

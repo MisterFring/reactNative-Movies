@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/core';
 import {
     FlatList,
     View,
@@ -11,9 +12,10 @@ import {
 } from 'react-native';
 
 const likedMovies = () => {
+    const navigation = useNavigation()
     const [movies_liked, setMovies_liked] = useState([])
 
-    useEffect ( () => {
+    useFocusEffect ( () => {
         const run = async () => {
             // await AsyncStorage.setItem('@movies_liked', ''); pour vider la 'bdd'
             let likedMovies = (await getMoviesLiked());
@@ -28,9 +30,11 @@ const likedMovies = () => {
             console.log('Nombre films likés : ' + likedMoviesFiltered.length)
 
             setMovies_liked(likedMoviesFiltered)
+
+            return false
         }
         run()
-    }, [])
+    })
 
     const getMoviesLiked = async () => {
         try {
@@ -59,7 +63,7 @@ const likedMovies = () => {
             style={styles.container}
             renderItem={({item}) => {
                 return (
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={ () => navigation.navigate('MovieDetails', {movie : item})}>
                         <View style={styles.movieContainer}>
                             <Image
                                 resizeMode='cover'
