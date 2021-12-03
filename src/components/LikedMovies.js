@@ -15,7 +15,27 @@ const likedMovies = () => {
     const navigation = useNavigation()
     const [movies_liked, setMovies_liked] = useState([])
 
-    useFocusEffect ( () => {
+    const getMoviesLiked = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@movies_liked')
+            console.log('@movies_liked : ' + jsonValue)
+            return jsonValue != null ? jsonValue : null;
+        } catch (e) {
+            // error reading value
+        }
+    }
+
+    const getAllMovies = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@movies_trending')
+            console.log('@movies_trending : ' + jsonValue)
+            return jsonValue != null ? jsonValue : null;
+        } catch (e) {
+            // error reading value
+        }
+    }
+
+    useFocusEffect(useCallback(() => {
         const run = async () => {
             // await AsyncStorage.setItem('@movies_liked', ''); pour vider la 'bdd'
             let likedMovies = (await getMoviesLiked());
@@ -31,39 +51,23 @@ const likedMovies = () => {
 
             setMovies_liked(likedMoviesFiltered)
 
-            return false
         }
+
         run()
-    })
 
-    const getMoviesLiked = async () => {
-        try {
-          const jsonValue = await AsyncStorage.getItem('@movies_liked')
-          console.log('@movies_liked : ' + jsonValue)
-          return jsonValue != null ? jsonValue : null;
-        } catch(e) {
-          // error reading value
-        }
-    }
+    }, [])
+    )
 
-    const getAllMovies = async () => {
-        try {
-          const jsonValue = await AsyncStorage.getItem('@movies_trending')
-          console.log('@movies_trending : ' + jsonValue)
-          return jsonValue != null ? jsonValue : null;
-        } catch(e) {
-          // error reading value
-        }
-    }
+
 
     return (
         <FlatList
             data={movies_liked}
             numColumns={2}
             style={styles.container}
-            renderItem={({item}) => {
+            renderItem={({ item }) => {
                 return (
-                    <TouchableOpacity onPress={ () => navigation.navigate('MovieDetails', {movie : item})}>
+                    <TouchableOpacity onPress={() => navigation.navigate('MovieDetails', { movie: item })}>
                         <View style={styles.movieContainer}>
                             <Image
                                 resizeMode='cover'
@@ -77,7 +81,7 @@ const likedMovies = () => {
                     </TouchableOpacity>
                 )
             }}
-        />  
+        />
     )
 }
 
@@ -85,14 +89,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    moviesList:{
+    moviesList: {
         flex: 1,
     },
-    movieContainer:{
+    movieContainer: {
         width: "50%",
         padding: 10,
     },
-    posterImg:{
+    posterImg: {
         width: 150,
         height: 150
     }

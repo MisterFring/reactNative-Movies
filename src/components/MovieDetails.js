@@ -102,8 +102,6 @@ const MovieDetails = props => {
                     />
                 </TouchableOpacity>
             </View>
-
-
         </View>
     )
 }

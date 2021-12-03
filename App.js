@@ -42,12 +42,6 @@ const App = () => {
 
       </Stack.Navigator>
     </NavigationContainer>
-    // <SafeAreaView style={styles.container}>
-    //     {/* <Movies/> */}
-    //     {/*<FlatListPrenom/>*/}
-    //     {/* <Login/> */}
-    //     <ToDoList/>        
-    // </SafeAreaView>
   );
 };
 
