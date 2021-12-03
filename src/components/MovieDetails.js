@@ -86,8 +86,7 @@ const MovieDetails = props => {
     useEffect(() => {
         axios.get(`https://api.themoviedb.org/3/movie/370172/videos?api_key=` +  'd89f44ef7b82944aedf327888bbcccab')
             .then(res => {
-                // const video = res.data.results;
-                console.log(res.data.results[0])
+                const video = res.data.results[0];
             })
     }, [])
 
