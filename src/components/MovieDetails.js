@@ -86,67 +86,100 @@ const MovieDetails = (props) => {
       return jsonValue != null ? jsonValue : null;
     } catch (e) {
       // error reading value
-
-      useEffect(() => {
-        axios
-          .get(
-            `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=` +
-              "d89f44ef7b82944aedf327888bbcccab"
-          )
-          .then((res) => {
-            const key = res.data.results[0].key;
-            console.log(typeof key);
-            console.log(key);
-            setMovieKey(key);
-          });
-      }, []);
-
-      const SendEmail = () => {
-        if (Platform.OS === "android") {
-          check(PERMISSIONS.ANDROID.READ_CONTACTS).then((result) => {
-            switch (result) {
-              case RESULTS.DENIED:
-                request(PERMISSIONS.ANDROID.READ_CONTACTS);
-                console.log("denied");
-                break;
-              case RESULTS.GRANTED:
-                console.log("The permission is granted");
-                onSharePress = () => Share.share(shareOptions);
-                break;
-              case RESULTS.BLOCKED:
-                request(PERMISSIONS.ANDROID.READ_CONTACTS);
-                console.log(
-                  "The permission is denied and not requestable anymore"
-                );
-                alert(
-                  "Vous avez précédemment refusé l accès aux contacts, allez dans vos paramètres pour changer la permission"
-                );
-
-                break;
-            }
-          });
-        } else if (Platform.OS === "ios") {
-          request(PERMISSIONS.IOS.CONTACTS).then((result) => {
-            if (result == "granted") {
-              setIsPermitted(true);
-            } else {
-              setIsPermitted(false);
-            }
-          });
-        }
-      };
     }
+  };
 
-    return (
-      <ScrollView>
-        <View style={styles.container}>
-          <TouchableOpacity onPress={SendEmail}>
-            <Image
-              source={require("../assets/images/share.png")}
-              style={styles.shareIcon}
-            />
-          </TouchableOpacity>
+  useEffect(() => {
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=` +
+          "d89f44ef7b82944aedf327888bbcccab"
+      )
+      .then((res) => {
+        const key = res.data.results[0].key;
+        console.log(typeof key);
+        console.log(key);
+        setMovieKey(key);
+      });
+  }, []);
 
+  const SendEmail = () => {
+    if (Platform.OS === "android") {
+      check(PERMISSIONS.ANDROID.READ_CONTACTS).then((result) => {
+        switch (result) {
+          case RESULTS.DENIED:
+            request(PERMISSIONS.ANDROID.READ_CONTACTS);
+            console.log("denied");
+            break;
+          case RESULTS.GRANTED:
+            console.log("The permission is granted");
+            onSharePress = () => Share.share(shareOptions);
+            break;
+          case RESULTS.BLOCKED:
+            request(PERMISSIONS.ANDROID.READ_CONTACTS);
+            console.log("The permission is denied and not requestable anymore");
+            alert(
+              "Vous avez précédemment refusé l accès aux contacts, allez dans vos paramètres pour changer la permission"
+            );
+
+            break;
+        }
+      });
+    } else if (Platform.OS === "ios") {
+      request(PERMISSIONS.IOS.CONTACTS).then((result) => {
+        if (result == "granted") {
+          setIsPermitted(true);
+        } else {
+          setIsPermitted(false);
+        }
+      });
+    }
+  };
+
+  return (
+    //   <ScrollView>
+    //     <View style={styles.container}>
+    //       <TouchableOpacity onPress={SendEmail}>
+    //         <Image
+    //           source={require("../assets/images/share.png")}
+    //           style={styles.shareIcon}
+    //         />
+    //       </TouchableOpacity>
+
+    //       <Image
+    //         resizeMode="cover"
+    //         style={styles.posterImg}
+    //         source={{
+    //           uri: "https://image.tmdb.org/t/p/w500" + movie.poster_path,
+    //         }}
+    //       />
+    //       <Text style={styles.movieTitle}>{movie.original_title}</Text>
+    //       <Text>{movie.id}</Text>
+    //       <Text>Synopsis : {movie.overview}</Text>
+    //       <Text>Note des spectateurs : {movie.vote_average} / 10</Text>
+    //       <TouchableOpacity onPress={() => storeData(movie.id)}>
+    //         <Image
+    //           style={movieLiked ? styles.likeImgRed : styles.likeImg}
+    //           source={require("../assets/images/coeur.png")}
+    //         />
+    //       </TouchableOpacity>
+    //       <TouchableOpacity onPress={getData}>
+    //         <Text>test get data</Text>
+    //       </TouchableOpacity>
+    //       <View>
+    //         <YouTube
+    //           apiKey={apiKey}
+    //           videoId={movieKey} // The YouTube video ID
+    //           style={{ width: width - 50, height: 300 }}
+    //           play={true}
+    //         />
+    //       </View>
+    //     </View>
+    //   </ScrollView>
+
+    <View style={styles.container}>
+      <ScrollView style={styles.blockDetails}>
+        <TouchableOpacity>
           <Image
             resizeMode="cover"
             style={styles.posterImg}
@@ -154,31 +187,41 @@ const MovieDetails = (props) => {
               uri: "https://image.tmdb.org/t/p/w500" + movie.poster_path,
             }}
           />
-          <Text style={styles.movieTitle}>{movie.original_title}</Text>
-          <Text>{movie.id}</Text>
-          <Text>Synopsis : {movie.overview}</Text>
-          <Text>Note des spectateurs : {movie.vote_average} / 10</Text>
-          <TouchableOpacity onPress={() => storeData(movie.id)}>
-            <Image
-              style={movieLiked ? styles.likeImgRed : styles.likeImg}
-              source={require("../assets/images/coeur.png")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={getData}>
-            <Text>test get data</Text>
-          </TouchableOpacity>
-          <View>
-            <YouTube
-              apiKey={apiKey}
-              videoId={movieKey} // The YouTube video ID
-              style={{ width: width - 50, height: 300 }}
-              play={true}
-            />
-          </View>
+        </TouchableOpacity>
+
+        <Text style={styles.movieTitle}>{movie.original_title}</Text>
+        <Text>Synopsis : {movie.overview}</Text>
+        <Text>Note des spectateurs : {movie.vote_average} / 10</Text>
+        <View>
+          <YouTube
+            apiKey={apiKey}
+            videoId={movieKey} // The YouTube video ID
+            style={{ width: width - 50, height: 300 }}
+            play={true}
+          />
         </View>
       </ScrollView>
-    );
-  };
+
+      <View style={styles.imagesContainer}>
+        <TouchableOpacity onPress={() => storeData(movie.id)}>
+          <Image
+            style={styles.likeImg}
+            source={
+              movieLiked
+                ? require("../assets/images/coeur-rouge.png")
+                : require("../assets/images/coeur.png")
+            }
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={SendEmail}>
+          <Image
+            source={require("../assets/images/share.png")}
+            style={styles.shareIcon}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
