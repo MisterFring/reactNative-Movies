@@ -9,39 +9,32 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-const likedMovies = props => {
+const likedMovies = () => {
     const [movies_liked, setMovies_liked] = useState([])
 
-    useEffect ( ()=> {
+    useEffect ( () => {
         const run = async () => {
             // await AsyncStorage.setItem('@movies_liked', ''); pour vider la 'bdd'
             let likedMovies = (await getMoviesLiked());
             const test = likedMovies.split(',')
             const allMovies = JSON.parse(await getAllMovies());
 
-            console.log('movies liked : ' + test)
-            console.log('getall movies : ' + allMovies)
+            console.log('id des films likés : ' + test)
+            console.log('Nombre total de film : ' + allMovies.length)
 
-            const aaaaaa = allMovies.filter(e => test.includes(e.id.toString()))
+            const likedMoviesFiltered = allMovies.filter(e => test.includes(e.id.toString()))
 
-            console.log('juste les films likés : ' + aaaaaa)
+            console.log('Nombre films likés : ' + likedMoviesFiltered.length)
 
-            setMovies_liked(aaaaaa)
-
-            if (likedMovies.length > 0) {    
-                const likedMoviesArray = likedMovies.split(',')
-            }
+            setMovies_liked(likedMoviesFiltered)
         }
-        
         run()
-        
-
     }, [])
 
     const getMoviesLiked = async () => {
         try {
           const jsonValue = await AsyncStorage.getItem('@movies_liked')
-          console.log('data in storage : ' + jsonValue)
+          console.log('@movies_liked : ' + jsonValue)
           return jsonValue != null ? jsonValue : null;
         } catch(e) {
           // error reading value
@@ -51,7 +44,7 @@ const likedMovies = props => {
     const getAllMovies = async () => {
         try {
           const jsonValue = await AsyncStorage.getItem('@movies_trending')
-          console.log('data in storage : ' + jsonValue)
+          console.log('@movies_trending : ' + jsonValue)
           return jsonValue != null ? jsonValue : null;
         } catch(e) {
           // error reading value

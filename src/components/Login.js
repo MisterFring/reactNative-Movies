@@ -1,4 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 import {
     Image,
@@ -9,38 +13,47 @@ import {
     View,
     StyleSheet
   } from 'react-native';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const Login = () => {
+    const navigation = useNavigation()
+    const [mail, setMail] = useState('')
     const [pwd, setPwd] = useState('');
-    const [confirmPwd, setConfirmPwd] = useState('');
-    const [isValid, setIsValid] = useState(true);
-    const [pwdsEqual, setPwdsEqual] = useState(true);
-
-    console.log('mdp : ' + pwd);
-    const checkPwd = useCallback( () => {
-        const valid = pwd.length > 3
-        setIsValid(valid) 
-        return valid
-    }, [pwd])
-
-    const checkConfPwd = useCallback( () => {
-        const isEqual = pwd === confirmPwd;
-        setPwdsEqual(isEqual);
-        return isEqual;
-    }, [pwd, confirmPwd])
 
     const pressButton = useCallback( () => {
-        if (!checkPwd() | !checkConfPwd()){
-            return
-        }
-        alert('Bonjour, votre mot de passe est : ' + pwd);
-    }, [pwd, checkPwd, checkConfPwd]);
+        loginUser()
+    }, [mail, pwd]);
+
+    const loginUser = async () => {
+        // await AsyncStorage.setItem('@users', ''); //pour vider la 'bdd'
+        AsyncStorage.getItem('@users', (err, result) => {
+            console.log('in storage : ' + result)
+            let bool = false;
+
+            const myArrayOfUsers = JSON.parse(result)
+
+            if (myArrayOfUsers) {
+                for (let i = 0; i < myArrayOfUsers.length; i++) {
+                    const element = myArrayOfUsers[i];
+                    if ((element.mail == mail) && (element.password == pwd)) {
+                        console.log('user retrouvé')
+                        bool = true
+                        break
+                    }
+                }
+            }
+            
+            if (bool) {
+                navigation.navigate('TabNav')
+            } else {
+                alert('combinaison mail / mot de passe fausse')
+            }
+        });
+    }
+
 
     return (
     <ScrollView>
         <View style={styles.center}>
-          <Text style={styles.title}>Inscription</Text>
           <Image
             source={{
                 uri: 'https://lh3.googleusercontent.com/proxy/nuggHz1hsPEiIL0ndXZvypUAlYRSxJ0FX_aitoQ5TrLPmhxe1mG2KxE5WCheD1H1zLIyaBznSRcB-d5j0RNNfuke6BeE-CPJRuGGlvZfnuN5dGo8Dg'
@@ -49,23 +62,17 @@ const Login = () => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <TextInput style={styles.inputBox} placeholder={'Prénom'} />
-          <TextInput style={styles.inputBox} placeholder={'Nom'} />
-          <TextInput onChangeText={setPwd} onEndEditing={checkPwd} value={pwd} style={[styles.inputBox, {borderColor: isValid ? 'black' : 'red'}]} placeholder={'Mot de passe'} />
-          <TextInput
-            onEndEditing={checkConfPwd}
-            onChangeText={setConfirmPwd}
-            value={confirmPwd}
-            style={[styles.inputBox, {borderColor: pwdsEqual ? 'black' : 'red'}]}
-            placeholder={'Confirmer mot de passe'}
-          />
+          <TextInput style={styles.inputBox} placeholder={'Adresse mail'} value={mail} onChangeText={setMail}/>
+          <TextInput onChangeText={setPwd} value={pwd} style={styles.inputBox} placeholder={'Mot de passe'} />
         </View>
         <View style={styles.center}>
           <TouchableOpacity style={styles.button} onPress={pressButton}>
             <Text>Envoyer</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
+            <Text>Register</Text>
+          </TouchableOpacity>
         </View>
-        <KeyboardSpacer/>
     </ScrollView>
     )
 
