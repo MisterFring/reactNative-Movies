@@ -11,11 +11,14 @@ import {
     Text,
     Image,
     SafeAreaView,
-    TouchableOpacity
+    TouchableOpacity,
+    TextInput
 } from 'react-native';
 
 const Movies = () => {
+    const [search, setSearch] = useState('');
     const [data, setData] = useState([]);
+
     // const test = new TMDB()
     const navigation = useNavigation()
     
@@ -24,6 +27,7 @@ const Movies = () => {
             .then(res => {
             const movies = res.data.results;
             setData(movies)
+
             try {
                 AsyncStorage.setItem('@movies_trending', JSON.stringify(movies))
             } catch (error) {
@@ -31,11 +35,26 @@ const Movies = () => {
             }
         })
     }, [])
+
+    // Update movies list according to search bar and data values
+    const dataFiltered = useMemo( () => {
+
+        console.log('search : ' + search)
+        
+        // Change all elements to lower case for better UX
+        return data.filter(movie => movie.original_title.toLowerCase().includes(search.toLowerCase()))
+    }, [data, search])
     
     return (
             <SafeAreaView style={styles.container}>
+                <TextInput
+                    value={search}
+                    onChangeText={setSearch}
+                    style={styles.search} 
+                    placeholder='Rechercher...'>
+                </TextInput>
                 <FlatList
-                    data={data}
+                    data={search ? dataFiltered : data}
                     style={styles.moviesList}
                     numColumns={2}
                     renderItem={({item}) => {
@@ -48,7 +67,7 @@ const Movies = () => {
                                         }}
                                         style={styles.posterImg}
                                     />
-                                    <Text>{item.original_title} - {item.release_date}</Text>
+                                    <Text style={styles.movieTitle}>{item.original_title}</Text>
                                 </View>
                             </TouchableOpacity>
                         )
@@ -61,17 +80,31 @@ const Movies = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        alignItems: 'center',
     },
     moviesList:{
         flex: 1,
+        
     },
     movieContainer:{
-        width: "50%",
         padding: 10,
     },
     posterImg:{
         width: 150,
-        height: 150
+        height: 150,
+        borderRadius: 5
+    },
+    search:{
+        marginTop: 20,
+        borderWidth: 2,
+        borderRadius: 5,
+        height: 50,
+        borderColor: 'black',
+        marginHorizontal: 20,
+        width: '90%'
+    },
+    movieTitle: {
+        maxWidth: '50%'
     }
 })
 
