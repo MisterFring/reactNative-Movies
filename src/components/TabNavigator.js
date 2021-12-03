@@ -8,6 +8,7 @@ import LikedMovies from './LikedMovies';
 import { View, Image } from 'react-native';
 
 
+
 const Tab = createBottomTabNavigator();
 
 
@@ -15,6 +16,7 @@ const Tab = createBottomTabNavigator();
 // import {DB_KEY} from 'react-native-dotenv'
 
 const TabNavigator = () => {
+
     const [nbMoviesLiked, setNbMoviesLiked] = useState(0)
     useEffect( () => {
         getNumberOfMoviesLiked()
